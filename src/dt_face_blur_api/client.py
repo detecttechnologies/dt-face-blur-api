@@ -31,9 +31,9 @@ class FaceBlurAPI:
         try:
             response = requests.post(f"{self.api_url}/api/token/", headers=headers, data=payload)
             self.auth_token = json.loads(response.content).get("access")
-            logger.info("Login Successful")
+            logger.info("Succesfully obtained token for DT API!")
         except Exception as e:
-            logger.error(e)
+            logger.exception(e)
 
     def return_sub6m_json(self, img):
         """Progressively increases compression of image to generate JSON of size <6MB
@@ -85,7 +85,7 @@ class FaceBlurAPI:
             except RequestException as e:
                 retries += 1
                 if retries <= MAX_RETRY:
-                    logger.error(f"blur_cv2 failed try #{retries}")
+                    logger.error(f"API Request failed, trying again!")
                     time.sleep(2)
                     if e.response.status_code == 403:
                         # Auth token expired, login again
@@ -108,4 +108,4 @@ class FaceBlurAPI:
             img (np.array): Face blurred image
         """
         img = cv2.imread(str(path))
-        return self.blur_cv2(img)
+        return self.blur_np(img)
