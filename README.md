@@ -11,7 +11,7 @@ pip install git+https://github.com/detecttechnologies/dt-face-blur-api.git
 
 ## Usage
 ```python
-from dt_face_blur import FaceBlurAPI
+from dt_face_blur_api import FaceBlurAPI
 
 fb = FaceBlurAPI(
     api_url="<URL of the API>",

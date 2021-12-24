@@ -10,7 +10,7 @@ setup(
     license="BSD 3-clause",
     package_dir={"": "src"},
     packages=find_packages(where="src"),
-    install_requires=["pathlib>=1.0.1", "opencv-python>=4.2.0.32", "requests>=2.23.0", "logzero>=1.7.0"],
+    install_requires=["opencv-python>=4.2.0.32", "requests>=2.23.0", "logzero>=1.7.0"],
     classifiers=[
         "License :: OSI Approved :: BSD License",
         "Operating System :: POSIX :: Linux",
