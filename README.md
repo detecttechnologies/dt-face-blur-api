@@ -21,3 +21,5 @@ fb = FaceBlurAPI(
 img = fb.blur_path("<path to an image>") # Opens and runs inference on image stored in the disk
 img2 = fb.blur_np(img_arr) # Runs inference on a numpy array
 ```
+
+## To get started, [Contact Us](mailto:sales@detecttechnologies.com)
