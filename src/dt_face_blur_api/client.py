@@ -35,7 +35,7 @@ class FaceBlurAPI:
         except Exception as e:
             logger.exception(e)
 
-    def return_sub6m_json(self, img):
+    def return_sub6m_json(self, img, blur_pct):
         """Progressively increases compression of image to generate JSON of size <6MB
 
         Args:
@@ -50,7 +50,7 @@ class FaceBlurAPI:
             encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), jpeg_quality]
             img_bytes = cv2.imencode(".jpg", img, encode_param)[1].tobytes()
             img_str = base64.b64encode(img_bytes).decode("utf-8")
-            data = {"img": img_str, "jpeg_quality": jpeg_quality}
+            data = {"img": img_str, "jpeg_quality": jpeg_quality, "blur_pct": blur_pct}
             data_json = json.dumps(data)
             logger.info(f"data_json size in KB: {len(data_json)/1024}")
 
@@ -59,16 +59,17 @@ class FaceBlurAPI:
             jpeg_quality -= 5
         return None
 
-    def blur_np(self, img):
+    def blur_np(self, img, blur_pct=100):
         """Blurs image given as np.array/cv2 image
 
         Args:
             img (np.array): Input image
+            blur_pct (int): Max permissible blur size w.r.t image size
 
         Returns:
             img (np.array): Face blurred image
         """
-        data_json = self.return_sub6m_json(img)
+        data_json = self.return_sub6m_json(img, blur_pct)
 
         if not data_json:
             logger.error("Image too large to compress")
@@ -98,14 +99,15 @@ class FaceBlurAPI:
         img = cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
         return img
 
-    def blur_path(self, path):
+    def blur_path(self, path, blur_pct=100):
         """Blurs image given as a path
 
         Args:
             path (str): Input image path
+            blur_pct (int): Max permissible blur size w.r.t image size
 
         Returns:
             img (np.array): Face blurred image
         """
         img = cv2.imread(str(path))
-        return self.blur_np(img)
+        return self.blur_np(img, blur_pct)
