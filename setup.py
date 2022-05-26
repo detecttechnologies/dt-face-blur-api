@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="dt-face-blur-api",
-    version="0.1.0",
+    version="0.2.0",
     description="Face Blur API Client",
     url="https://detecttechnologies.com/",
     author="Detect Technologies Pvt. Ltd.",

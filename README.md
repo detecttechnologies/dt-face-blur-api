@@ -20,4 +20,9 @@ fb = FaceBlurAPI(
 )
 img = fb.blur_path("<path to an image>") # Opens and runs inference on image stored in the disk
 img2 = fb.blur_np(img_arr) # Runs inference on a numpy array
+img3 = fb.blur_path("<path to an image>", max_object_size=50) # set max_object_size as an optional parameter to limit max. permissible blur size w.r.t image size
 ```
+
+## Support
+- To gain access to the system, mail [sales](mailto:sales@detecttechnologies.com)
+- For support on usage of the system, mail [support](mailto:support@detecttechnologies.com)
