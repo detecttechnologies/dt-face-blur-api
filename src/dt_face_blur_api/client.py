@@ -60,7 +60,7 @@ class FaceBlurAPI:
             jpeg_quality -= 5
         return None
 
-    def blur_np(self, img, max_object_size=100):
+    def blur_np(self, img, max_object_size=-1):
         """Blurs image given as np.array/cv2 image
 
         Args:
