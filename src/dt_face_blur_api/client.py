@@ -60,7 +60,7 @@ class FaceBlurAPI:
             jpeg_quality -= 5
         return None
 
-    def blur_np(self, img, max_object_size=-1):
+    def blur_np(self, img, max_object_size=0):
         """Blurs image given as np.array/cv2 image
 
         Args:
@@ -100,7 +100,7 @@ class FaceBlurAPI:
         img = cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
         return img
 
-    def blur_path(self, path, max_object_size=100):
+    def blur_path(self, path, max_object_size=0):
         """Blurs image given as a path
 
         Args:
