@@ -18,9 +18,16 @@ fb = FaceBlurAPI(
     username="<Username>",
     password="<Password>"
 )
+#The list of polygons is used to blurr perticular areas of the image   
+my_polygons=[
+    [
+        [100,100],[200,100],[200,200],[100,200]
+    ]
+]
 img = fb.blur_path("<path to an image>") # Opens and runs inference on image stored in the disk
 img2 = fb.blur_np(img_arr) # Runs inference on a numpy array
 img3 = fb.blur_path("<path to an image>", max_object_size=50) # set max_object_size as an optional parameter to limit max. permissible blur size w.r.t image size
+img4 = fb.blur_path("<path to an image>", polygons=my_polygons) # pass polygons as a parameter to blur perticular areas of an image other than object
 ```
 
 ## Support
