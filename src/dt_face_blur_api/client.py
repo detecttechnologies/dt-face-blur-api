@@ -9,6 +9,25 @@ from logzero import logger
 from requests import RequestException
 
 
+def normalize_to_pixilated(polygons, image_shape):
+    """
+    Converts normalized to pixilated image cordinates
+
+    Args:
+        polygons (list): List of polygons
+        image_shape (tuple): Image shape
+
+    Returns:
+        List: List of polygons with pixilated polygons
+    """
+    for index in range(len(polygons)):
+        if polygons[index][0][0] <= 1:
+            for index1 in range(len(polygons[index])):
+                polygons[index][index1][0] *= image_shape[1]
+                polygons[index][index1][1] *= image_shape[0]
+    return polygons
+
+
 class FaceBlurAPI:
     def __init__(self, api_url, username, password):
         """FaceBlurAPI constructor
@@ -35,7 +54,7 @@ class FaceBlurAPI:
         except Exception as e:
             logger.exception(e)
 
-    def return_sub6m_json(self, img, max_object_size):
+    def return_sub6m_json(self, img, max_object_size, polygons):
         """Progressively increases compression of image to generate JSON of size <6MB
 
         Args:
@@ -51,7 +70,12 @@ class FaceBlurAPI:
             encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), jpeg_quality]
             img_bytes = cv2.imencode(".jpg", img, encode_param)[1].tobytes()
             img_str = base64.b64encode(img_bytes).decode("utf-8")
-            data = {"img": img_str, "jpeg_quality": jpeg_quality, "max_object_size": max_object_size}
+            data = {
+                "img": img_str,
+                "jpeg_quality": jpeg_quality,
+                "max_object_size": max_object_size,
+                "polygons": polygons,
+            }
             data_json = json.dumps(data)
             logger.info(f"data_json size in KB: {len(data_json)/1024}")
 
@@ -60,7 +84,7 @@ class FaceBlurAPI:
             jpeg_quality -= 5
         return None
 
-    def blur_np(self, img, max_object_size=100):
+    def blur_np(self, img, max_object_size=0, polygons=[]):
         """Blurs image given as np.array/cv2 image
 
         Args:
@@ -70,7 +94,9 @@ class FaceBlurAPI:
         Returns:
             img (np.array): Face blurred image
         """
-        data_json = self.return_sub6m_json(img, max_object_size)
+        polygons = normalize_to_pixilated(polygons, img.shape)
+        polygons = json.dumps(polygons)
+        data_json = self.return_sub6m_json(img, max_object_size, polygons)
 
         if not data_json:
             logger.error("Image too large to compress")
@@ -100,7 +126,7 @@ class FaceBlurAPI:
         img = cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
         return img
 
-    def blur_path(self, path, max_object_size=100):
+    def blur_path(self, path, max_object_size=0, polygons=[]):
         """Blurs image given as a path
 
         Args:
@@ -111,4 +137,4 @@ class FaceBlurAPI:
             img (np.array): Face blurred image
         """
         img = cv2.imread(str(path))
-        return self.blur_np(img, max_object_size)
+        return self.blur_np(img, max_object_size, polygons)
